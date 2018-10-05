@@ -1,0 +1,30 @@
+INSTALL ZABBIX SERVER
+yum update
+yum install httpd -y
+yum install php php-cli php-common php-devel php-pear php-gd php-mbstring php-mysql php-xml -y
+yum install mariadb-server -y
+systemctl enable httpd && systemctl start httpd
+systemctl enable mariadb && systemctl start mariadb 
+rpm --import http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
+rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-1.el7.centos.noarch.rpm
+yum install zabbix-server-mysql zabbix-web-mysql zabbix-agent zabbix-get zabbix-sender zabbix-java-gateway -y
+
+EDIT PHP TIMEZONE
+vi /etc/httpd/conf.d/zabbix.conf
+php_value date.timezone Asia/Jakarta
+systemctl reload httpd
+
+CREATE DATABASE ZABBIX
+mysql -u root -p
+CREATE DATABASE zabbixdb CHARACTER SET utf8 COLLATE utf8_bin;
+GRANT ALL PRIVILEGES ON zabbixdb.* TO zabbixwae@localhost IDENTIFIED BY "password_db";
+
+FLUSH PRIVILEGES;
+
+
+
+Set SELinux settings and adjust Firewall
+ed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+
+
+edit-edit tidak jelas

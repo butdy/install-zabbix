@@ -1,0 +1,124 @@
+copas from :
+![http](http://smallasa.com/2017/07/14/smokeping-install)  
+install basic encironment
+-------------------------
+yum -y install epel-release
+yum -y install gcc gcc-c++ make cmake bison libtool autoconf automake zip unzip bzip2 zlib zlib-devel openssl openssl-devel pcre pcre-devel bi$
+yum -y install git lftp ntpdate vim wget telnet dstat tree lrzsz net-tools nmap-ncat nmap sysstat
+
+
+check versi perl
+----------------
+perl -v|head -2|tail -1
+
+check versi curl
+----------------
+curl -V
+
+check versi ssh
+---------------
+ssh -V
+
+install fping
+--------------
+yum -y install fping
+
+install echoping
+-----------------
+yum -y install popt popt-devel libidn libidn-devel
+mkdir -p /home/app/ && pushd /home/app
+wget https://fossies.org/linux/misc/old/echoping-6.0.2.tar.gz
+tar xzf echoping-6.0.2.tar.gz && cd echoping-6.0.2
+./configure --prefix=/mnt/app/echoping && make && make install
+echo "ECHOPING_HOME=/mnt/app/echoping" |tee /etc/profile.d/echoping.sh
+echo "ECHOPING_BIN=\${ECHOPING_HOME}/bin" |tee -a /etc/profile.d/echoping.sh
+echo "export PATH=\${ECHOPING_BIN}:\$PATH" |tee -a /etc/profile.d/echoping.sh
+source /etc/profile.d/echoping.sh
+
+install perintah dig
+--------------------
+yum -y install bind-utils
+
+install rrdtool
+------------------
+yum -y install rrdtool rrdtool-perl
+
+install smokeping
+----------------
+yum -y install smokeping
+
+
+Konfigurasi Smokeping
+---------------------
+konfigurasi smokeping ada 3 tempat
+-konfigurasi di /etc/smokeping/config
+-konfigurasi httpd
+-konfigurasi template untuk integrasi dengan zabbix
+
+konfigurasi smokeping /etc/smokeping/config
+-------------------------------------------
+pada baris ke tiga tambahkan variable berikut
+
+*** Presentation ***
+Charset = utf-8
+
+pada baris 21, 22,23, dan 24
+Pattern = >0%, *12*, >0%, *12*, >0%
+Comment = loss 3 times in a row
+*** Database ***
+Step = 60
+
+
+Konfigurasi smokeping pada file /etc/httpd/conf.d/smokeping.conf
+-----------------------------------------------------------------
+cek konfigurasi seperti berikut :
+
+<Directory "/usr/share/smokeping" > 
+Require local 
+Require ip 0.0.0.0 
+# Require host example.org 
+Options Indexes FollowSymLinks 
+Options +ExecCGI 
+AllowOverride None 
+DirectoryIndex smokeping.fcgi 
+Require all granted 
+</Directory> 
+
+<Directory "/mnt/data/smokeping" > 
+Require local 
+Require ip 0.0.0.0 
+# Require host example.org 
+AllowOverride None 
+Require all granted 
+</Directory> 
+
+# .fcgi : smokeping by mod_fcgid aka fastcgi 
+# _cgi : plain old fashion cgi 
+ScriptAlias ??/smokeping/sm.cgi /usr/share/smokeping/cgi/smokeping.fcgi 
+#ScriptAlias ??/smokeping/sm.cgi /usr/share/smokeping/cgi/smokeping_cgi 
+
+Alias /smokeping/images /mnt/data/smokeping/images 
+Alias /smokeping /usr/share/smokeping/htdocs 
+
+buat soft connection
+--------------------
+ln -s /usr/share/smokeping/cgi/smokeping_cgi /usr/share/smokeping/htdocs/smokeping.fcgi
+
+start dan enable smokeping
+--------------------------
+systemctl enable smokeping
+systemctl start smokeping
+systemctl restart httpd
+
+Cek smokeping yang sudah berjalan
+---------------------------------
+akses di http://ipserver/smokeping
+
+Install Template smokeping ke zabbix template
+---------------------------------------------
+
+X
+X
+X
+
+

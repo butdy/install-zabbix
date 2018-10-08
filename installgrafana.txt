@@ -1,0 +1,28 @@
+install mysql
+create database grafana
+create user for grafana
+install grafana from https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.6.3-1.x86_64.rpm
+backup konfig grafana /etc/grafana/grafana.ini
+konfigure grafana
+ DATABASE
+- type = mysql
+- host =127.0.0.1:3306
+- name = grafana
+- user = grafana
+- password = password
+ SESSION
+- provider = mysql
+- provider_config = 'grafana:password@tcp(127.0.0.1:3306)/grafana'
+enable service grafana
+- systemctl enable grafana-server
+reload service
+- systemctl daemon-reload
+restart grafana server
+- systemctl start grafana-server
+open port for grafana
+- firewall-cmd --add-port=3000/tcp --permanent
+- firewall-cmd --reload
+Login ke grafana
+setting dashboard menggunakan source zabbix
+import template zabbix
+dst

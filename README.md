@@ -21,3 +21,10 @@ HTTP Latency Graph
 - Http latency
 - percentase (50th)
 ![HTTP Latency Graph](https://github.com/butdy/install-zabbix/blob/master/screenshoot/http-grarh.JPG)
+
+Integrate Grafana and Zabbix
+----------------------------
+Melihat Indahnya Dashboard Grafana yang terasa lebih indah daripada zabbix, tetapi rasanya masih 
+terasa manis zabbix dan muncullah ide2 dari penggguna dan pemakai grafana untuk Combine keduanya.
+Untuk integrasi antara zabbix dan grafana kita perlu menginstall grafana terlebih dahulu
+==> cek installgrafana.txt

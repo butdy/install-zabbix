@@ -114,11 +114,15 @@ Cek smokeping yang sudah berjalan
 ---------------------------------
 akses di http://ipserver/smokeping
 
-Install Template smokeping ke zabbix template
+Import Template smokeping ke zabbix template
 ---------------------------------------------
 
-X
-X
-X
+buka menu Configuration --> Templates --> pilih import
+kemudian pilih file _NW_Smokeping.xml
+==> template smokeping berhasil di install
 
-
+Pasang Smokeping pada Server / Host yang di monitoring
+------------------------------------------------------
+buka menu host --> pilih host yang dimonitoring --> pilih tab template 
+--> tambahkan linked new templates --> select --> NW_SmokePing
+==> host sudah terpasang Smoke Ping

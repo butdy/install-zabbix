@@ -1,0 +1,71 @@
+Langkah-langkah untuk konfigurasi alert email di zabbix sebagai berikut :
+-------------------------------------------------------------------------
+1. remove sendmail  
+2. install postfix  
+3. konfigurasi user dan password email gmail di postfix  
+4. Aktifkan "less secure apps" di akun gmail  
+5. Test kirim email menggunakan mta postfix  
+6. konfigurasi user / administrator di zabbix -- penerima email  
+7. konfigurasi media di zabbix  
+8. Konfigurasi Notification Email pastikan enabled
+
+1. Remove sendmail
+------------------
+   yum remove sendmail  
+
+2. Install Postfix dan library yang di butuhkan
+-----------------------------------------------
+   yum install postfix mailutils mailx cyrus-sasl cyrus-sasl-plain 
+
+3. Konfigurasi User dan Password Email gmail di postfix
+------------------------------------------------------
+   buat file yang berisi username dan password gmail   
+   vi /etc/postfix/sasl_passwd   
+
+   Tambahkan baris berikut di dalam file sasl_passwd   
+   [smtp.gmail.com]:587 username@gmail.com:password  
+
+   Save dan close. Kemudian berikan permission semua user bisa read file username dan password gmail   
+   chmod 600 /etc/postfix/sasl_passwd   
+
+   Ubah file konfigurasi Postfix agar menjadi relay host email gmail  
+   vi /etc/postfix/main.cf  
+   
+   Tambahkan seperti berikut :  
+   relayhost = [smtp.gmail.com]:587  
+   smtp_use_tls = yes  
+   smtp_sasl_auth_enable = yes  
+   smtp_sasl_security_options =  
+   smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd  
+   smtp_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt  
+   ## cafile ada yang .pem atau .crt, bisa di cari menggunakan find / -iname .crt  
+   
+   lakukan mapping username email  
+   postmap /etc/postfix/sasl_passwd  
+
+   save dan restart postfix  
+   systemctl restart postfix  
+
+4. Aktifkan "less secure apps" di akun gmail  
+   baca dokumennya di google ya (^_^)  
+
+5. Test kirim email menggunakan mta postfix  
+   misalnya :  
+   uptime | mail -s "UPTIME status for your server" -r email_relay@gmail.com email_tujuan@gmail.com  
+   
+   Apabila tidak terkirim cek status log nya  
+   tail -f /var/log/maillog  
+
+6. konfigurasi user / administrator di zabbix -- penerima email  
+   bisa di lihat seperti gambar berikut :  
+   ![Konfigurasi Administrator](https://github.com/butdy/install-zabbix/blob/master/screenshoot/administrator-zabbix.jpg)
+
+7. konfigurasi media di zabbix  
+   bisa di lihat seperti gambar berikut :  
+   ![Konfigurasi Media](https://github.com/butdy/install-zabbix/blob/master/screenshoot/media.jpg)
+
+8. Konfigurasi Notification Email pastikan enabled
+   Pastikan notifikasi alert sudah di enabled supaya zabbix otomatis kirim email saat ada trouble
+   ![Konfigurasi Media](https://github.com/butdy/install-zabbix/blob/master/screenshoot/enable-alert.jpg)
+
+   

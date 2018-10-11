@@ -58,14 +58,14 @@ Langkah-langkah untuk konfigurasi alert email di zabbix sebagai berikut :
 
 6. konfigurasi user / administrator di zabbix -- penerima email  
    bisa di lihat seperti gambar berikut :  
-   ![Konfigurasi Administrator](https://github.com/butdy/install-zabbix/blob/master/screenshoot/administrator-zabbix.jpg)
+   (https://github.com/butdy/install-zabbix/blob/master/screenshoot/administrator-zabbix.jpg)
 
 7. konfigurasi media di zabbix  
    bisa di lihat seperti gambar berikut :  
-   ![Konfigurasi Media](https://github.com/butdy/install-zabbix/blob/master/screenshoot/media.jpg)
+   (https://github.com/butdy/install-zabbix/blob/master/screenshoot/media.jpg)
 
 8. Konfigurasi Notification Email pastikan enabled
    Pastikan notifikasi alert sudah di enabled supaya zabbix otomatis kirim email saat ada trouble
-   ![Konfigurasi Media](https://github.com/butdy/install-zabbix/blob/master/screenshoot/enable-alert.jpg)
+   (https://github.com/butdy/install-zabbix/blob/master/screenshoot/enable-alert.jpg)
 
    

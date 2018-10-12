@@ -1,0 +1,2 @@
+install zabbix server on server
+install zabbix proxy

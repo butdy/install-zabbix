@@ -29,7 +29,20 @@ sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
 Open Port supaya listening pada port yang di tentukan
 
 sudo firewall-cmd --permanent --add-port=10050/tcp ## untuk zabbix server
+sudo firewall-cmd --permanent --add-port=10051/tcp ## untuk zabbix server
 sudo firewall-cmd --permanent --add-port=3306/tcp ## untuk database
 sudo firewall-cmd --reload
 
-edit-edit tidak jelas
+
+Untuk installasi manual 
+=======================
+
+Create Database Untuk Zabbix
+----------------------------------------------
+zcat /usr/share/doc/zabbix-server-mysql-3.4.14/create.sql.gz | mysql -uzabbixwae zabbixdb -p
+
+Create file Konfigurasi Web Zabbix
+----------------------------------
+touch /etc/zabbix/web/zabbix.conf.php
+chown apache:apache /etc/zabbix/web/zabbix.conf.php
+==> cek file https://github.com/butdy/install-zabbix/blob/master/konfig/zabbix.conf.php

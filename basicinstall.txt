@@ -28,7 +28,7 @@ sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
 
 Open Port supaya listening pada port yang di tentukan
 
-sudo firewall-cmd --permanent --add-port=10050/tcp ## untuk zabbix server
+sudo firewall-cmd --permanent --add-port=10050/tcp ## untuk zabbix agent
 sudo firewall-cmd --permanent --add-port=10051/tcp ## untuk zabbix server
 sudo firewall-cmd --permanent --add-port=3306/tcp ## untuk database
 sudo firewall-cmd --reload
@@ -46,3 +46,48 @@ Create file Konfigurasi Web Zabbix
 touch /etc/zabbix/web/zabbix.conf.php
 chown apache:apache /etc/zabbix/web/zabbix.conf.php
 ==> cek file https://github.com/butdy/install-zabbix/blob/master/konfig/zabbix.conf.php
+
+Konfig file status server zabbix
+--------------------------------
+
+vi /etc/zabbix/zabbix_server.conf  
+pada baris 101, 117, 126  
+sesuaikan konfigurasi dengan user zabbix akses ke dalam database  
+
+Konfig file zabbix-agent pada server zabbix
+-------------------------------------------
+vi /etc/zabbix/zabbix_agentd.conf
+pada baris 97, 138, 150 
+sesuaikan seperti berikut :
+Server=127.0.0.1   ## pada baris 97
+ServerActive=127.0.0.1  ## pada baris 138
+Hostname=zabbix-proxy ## pada baris 150
+
+restart semua service zabbix
+----------------------------
+
+systemctl restart zabbix-agent
+systemctl restart zabbix-server
+systemctl restart httpd
+
+Konfigurasi Pada zabbix agent
+-----------------------------
+1. Update zabbix-agent   
+yum remove zabbix-agent   
+rpm -Uvh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm   
+
+rpm -qa | grep 'zabbix'  
+## remove all packages yang tidak di perlukan   
+yum install zabbix-agent zabbix-sender   
+2. Konfigurasi konfigurasi zabbix agent   
+vi /etc/zabbix/zabbix_agentd.conf   
+   pada baris 97, 138, 150
+sesuaikan seperti berikut :
+Server=10.10.5.86   ## pada baris 97
+ServerActive=10.10.5.86  ## pada baris 138
+Hostname=server-db ## pada baris 150
+
+##########################################
+## TROUBLESHOOTING #######################
+------------------------------------------
+tail -f /var/log/zabbix/zabbix_server.log

@@ -24,7 +24,12 @@ FLUSH PRIVILEGES;
 
 
 Set SELinux settings and adjust Firewall
-ed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
 
+Open Port supaya listening pada port yang di tentukan
+
+sudo firewall-cmd --permanent --add-port=10050/tcp ## untuk zabbix server
+sudo firewall-cmd --permanent --add-port=3306/tcp ## untuk database
+sudo firewall-cmd --reload
 
 edit-edit tidak jelas

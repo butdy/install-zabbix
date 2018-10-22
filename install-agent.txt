@@ -1,0 +1,41 @@
+Untuk install zabbix Agent pada masing-masing server saya menggunakan repo zabbix
+---------------------------------------------------------------------------------
+
+## Centos 6 ##
+rpm --import http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
+rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+yum install zabbix-agent zabbix-get zabbix-sender
+
+## Centos 7 ##
+rpm --import http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
+rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-1.el7.centos.noarch.rpm
+yum install zabbix-agent zabbix-get zabbix-sender
+
+
+## Install dari source nya ##
+# source https://www.zabbix.com/documentation/3.4/manual/installation/install
+wget https://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/3.4.14/zabbix-3.4.14.tar.gz/download
+tar -zxvf zabbix-3.4.14.tar.gz
+cd zabbix-3.4.0
+
+# persiapan compile zabbix, create group dan user
+groupadd --system zabbix
+useradd --system -g zabbix -d /usr/lib/zabbix -s /sbin/nologin -c "Zabbix Monitoring System" zabbix
+mkdir -m u=rwx,g=rwx,o= -p /usr/lib/zabbix
+chown zabbix:zabbix /usr/lib/zabbix
+
+# compile zabbix agent
+./configure --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libpcre=/usr/lib/ user=zabbix
+make install
+
+# ubah konfigurasi zabbix agent
+vi /usr/local/etc/zabbix_agentd.conf
+
+# cek pid dan log ada pada /tmp/zabbix.pid dan /tmp/zabbix_agent.log
+find -iname zabbix.pid
+find -iname zabbix_agent.log
+
+# install zabbix agent windows server
+download dari http://www.suiviperf.com/zabbix/old/
+
+

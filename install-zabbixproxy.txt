@@ -1,2 +1,56 @@
-install zabbix server on server
-install zabbix proxy
+basic knowledge : 
+zabbix proxy dan zabbix server melakukan tugas yang sama sehingga tidak bisa berjalan secara bersamaan
+kecuali berbeda mesin  
+
+## Disable selinux
+sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+
+# cek status selinux
+sestatus
+# install kebutuhan yang di perlukan untuk zabbix proxy
+yum -y install MariaDB-server MariaDB-client MariaDB-devel galera less which socat pwgen rsync
+
+mysql_secure_installation
+systemctl enable mariadb
+systemctl start mariadb
+
+# create database zabbix proxy
+mysql -u root -p create database zabbix_proxy;
+
+# install zabbix-proxy
+rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-1.el7.centos.noarch.rpm
+yum install zabbix-proxy-mysql zabbix-server-mysql zabbix-web-mysql zabbix-agent zabbix-get zabbix-sender zabbix-java-gateway -y
+yum install policycoreutils-python
+yum install zabbix-proxy-mysql
+systemctl enable zabbix-proxy
+
+# pasang database zabbix-proxy
+zcat /usr/share/doc/zabbix-proxy-mysql-3.4.14/schema.sql.gz | mysql -u userdatabase namadatabase -p
+
+# ubah konfigurasi zabbix proxy agar berkomunikasi dengan zabbix server
+vi /etc/zabbix/zabbix_proxy.conf
+Server=192.168.100.234
+Hostname=zabbix-alsut
+DBName="namadatabase"
+DBUser="userdatabase"
+DBPassword="passworddatabase"
+
+# jalankan zabbix-proxy
+systemctl enable zabbix-proxy
+
+# install kebutuhan untuk compile apabila memerlukan compile ulang (optional)
+yum -y install gmp-devel curl-devel libidn-devel libssh2-devel python-devel openldap-devel vim git net-tools bind-utils gcc make wget memcached libmemcached-devel groupinstall "Development Tools"
+
+# open port yang di gunakan untuk komunikasi antar zabbix server dan agent
+firewall-cmd --permanent --add-service=mysql
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+firewall-cmd --permanent --add-port=10050/tcp
+firewall-cmd --permanent --add-port=10051/tcp
+firewall-cmd --reload
+
+
+# Troubleshooting
+tail -f /var/log/zabbix/zabbix_proxy.log
+tail -f /var/log/zabbix/zabbix_agentd.log 
+tail -f /var/log/zabbix/zabbix_server.log 
+

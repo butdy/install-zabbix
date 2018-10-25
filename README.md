@@ -50,23 +50,23 @@ cabang bermasalah dengan koneksi kantor pusat.
 
 Install Zabbix- Agent di masing-masing server yang di monitor
 -------------------------------------------------------------
-sebelumnya hapus semua dependency zabbix-agent yang versi 3 ke bawah, dapat di cari dengan perintah
-rpm -qa | grep zabbix
-yum remove aplikasi yang di hapus
-==> cek install-agent.txt
+sebelumnya hapus semua dependency zabbix-agent yang versi 3 ke bawah, dapat di cari dengan perintah  
+rpm -qa | grep zabbix  
+yum remove aplikasi yang di hapus  
+==> cek install-agent.txt  
 
 Monitoring Database Mariadb atau Mysql
 --------------------------------------
-#Untuk Monitoring database mariadb perlu ditambahkan user dan password untuk mengakses database yaitu dengan membuat file .my.cnf
+Untuk Monitoring database mariadb perlu ditambahkan user dan password untuk mengakses database yaitu dengan membuat file .my.cnf
 
-vi /var/lib/zabbix/.my.cnf
+vi /var/lib/zabbix/.my.cnf  
 
-# isikan berikut :
-[client]
-user = namauserdatabase
-password = passworddatabase
+isikan berikut :  
+[client]  
+user = namauserdatabase  
+password = passworddatabase  
 
-kemudian tambahkan template app mysql pada host yang di monitoring
+kemudian tambahkan template app mysql pada host yang di monitoring  
 
 
 
